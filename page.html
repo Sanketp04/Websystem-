@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: skyblue;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            padding-left: 20px;
+            /* Adjust the padding as needed */
+        }
+
+        .heading-box {
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .hydro-watch-heading {
+            text-decoration-color: #282c34;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sub-heading {
+            font-size: 1.5em;
+            margin-top: 0;
+            color: #555;
+        }
+
+        .buttons-row {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .senser-button {
+            margin-right: 10px;
+        }
+
+        .vertical-buttons {
+            margin-top: 20px;
+        }
+
+        /* Updated Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #282c34;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #818181;
+        }
+
+        /* Updated Content Styles */
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 0;
+            transition: margin-left 0.5s;
+        }
+
+        .open-btn {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: 20px;
+            position: absolute;
+            left: 0%;
+            z-index: 2;
+        }
+
+        .content-divider {
+            /* Added margin for spacing */
+            margin: 0 auto;
+            width: 98%;
+            /* Make the line span the entire width */
+            box-sizing: border-box;
+            /* Include padding and border in the element's total width */
+            height: 0;
+            position: fixed;
+            margin-top: 18%;
+        }
+
+        /* Your vertical button style */
+        .vertical-button {
+            margin-right: 10px;
+        }
+    </style>
+    <title>Senser Page</title>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Open Button -->
+        <div class="open-btn" onclick="openSidebar()">&#9776;</div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="mySidebar">
+            <div class="close-btn" onclick="closeSidebar()">&times;</div>
+            <a href="NewButton.html">Setting</a>
+            <a href="NewButton.html">Delete</a>
+            <a href="NewButton.html">Data Monitoring</a>
+            <a href="#" onclick="addDynamicButtonFromSidebar()">Add Button</a>
+        </div>
+
+        <!-- Main Content -->
+        <!-- Updated HTML -->
+        <div class="content">
+            <div class="heading-box">
+                <h1 class="hydro-watch-heading">Hydro Watch</h1>
+                <p class="sub-heading">Affordable Water Gauging System</p>
+            </div>
+
+            <!-- Divider line -->
+        </div>
+        <hr class="content-divider">
+        <div>
+
+            <div class="buttons-row" id="buttonRow">
+                <!-- Your buttons here -->
+            </div>
+
+            <div class="vertical-buttons">
+                <button class="senser-button get-all-data" id="goForAllData" onclick="deleteLastButton()">
+                    Get all Data
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Updated Script -->
+    <!-- Updated Script -->
+<!-- Updated Script -->
+<!-- Updated Script -->
+<!-- Updated Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check if there are saved buttons in localStorage
+        if (localStorage.getItem("dynamicButtons")) {
+            // Parse the saved buttons and recreate them
+            var savedButtons = JSON.parse(localStorage.getItem("dynamicButtons"));
+            savedButtons.forEach(function (buttonInfo) {
+                createDynamicButton(buttonInfo.id, buttonInfo.label);
+            });
+        }
+    });
+
+    function openSidebar() {
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("buttonRow").style.marginLeft = "250px";
+    }
+
+    function closeSidebar() {
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("buttonRow").style.marginLeft = "0";
+    }
+
+    function redirectToCommonPage() {
+        // Redirect to the common page when a sidebar link is clicked
+        window.location.href = "NewButton.html"; // Replace with the actual URL of the common page
+    }
+
+    var dynamicButtonCounter = 1; // Counter for dynamic buttons
+
+    function addDynamicButtonFromSidebar() {
+        var newButtonLabel = "New Button " + dynamicButtonCounter;
+
+        // Create a new button and add it to the DOM
+        createDynamicButton("dynamicButton" + dynamicButtonCounter, newButtonLabel);
+
+        // Save the button information to localStorage
+        saveDynamicButton("dynamicButton" + dynamicButtonCounter, newButtonLabel);
+
+        // Increment the counter for the next dynamic button
+        dynamicButtonCounter++;
+
+        // Close the sidebar after adding the button
+        closeSidebar();
+    }
+
+    function createDynamicButton(id, label) {
+        // Create a new button element
+        var newButton = document.createElement("button");
+        newButton.className = "senser-button";
+        newButton.id = id;
+        newButton.innerHTML = label + " <img src='/Users/adi/Desktop/Deep/trash.svg' class='delete-icon' onclick=\"deleteButton('" + id + "')\" />";
+
+        // Add a click event listener to the new button
+        newButton.addEventListener("click", function () {
+            // Redirect to the common page when the button is clicked
+            redirectToCommonPage();
+        });
+
+        // Append the new button to the buttonRow
+        document.getElementById("buttonRow").appendChild(newButton);
+    }
+
+    function saveDynamicButton(id, label) {
+        // Check if there are saved buttons in localStorage
+        var savedButtons = localStorage.getItem("dynamicButtons")
+            ? JSON.parse(localStorage.getItem("dynamicButtons"))
+            : [];
+
+        // Add the new button information to the saved buttons array
+        savedButtons.push({ id: id, label: label });
+
+        // Save the updated buttons array to localStorage
+        localStorage.setItem("dynamicButtons", JSON.stringify(savedButtons));
+    }
+
+    function deleteButton(buttonId) {
+        // Log the button ID to the console for debugging
+        console.log("Deleting button with ID: " + buttonId);
+
+        // Get the button by ID
+        var button = document.getElementById(buttonId);
+
+        // Check if the button exists
+        if (button) {
+            // Remove the button
+            button.parentNode.removeChild(button);
+
+            // Remove the button information from localStorage
+            removeFromLocalStorage(buttonId);
+        } else {
+            // Log a message if the button doesn't exist
+            console.log("Button with ID " + buttonId + " does not exist.");
+        }
+    }
+
+    function removeFromLocalStorage(buttonId) {
+        // Check if there are saved buttons in localStorage
+        var savedButtons = localStorage.getItem("dynamicButtons")
+            ? JSON.parse(localStorage.getItem("dynamicButtons"))
+            : [];
+
+        // Remove the button information from the saved buttons array
+        var updatedButtons = savedButtons.filter(function (buttonInfo) {
+            return buttonInfo.id !== buttonId;
+        });
+
+        // Save the updated buttons array to localStorage
+        localStorage.setItem("dynamicButtons", JSON.stringify(updatedButtons));
+    }
+
+    function deleteLastButton() {
+        // Get the buttonRow element
+        var buttonRow = document.getElementById("buttonRow");
+
+        // Check if there are buttons to delete
+        if (buttonRow.children.length > 0) {
+            // Log the button ID to the console for debugging
+            console.log("Deleting last button with ID: " + buttonRow.lastElementChild.id);
+
+            // Remove the last button
+            buttonRow.removeChild(buttonRow.lastElementChild);
+
+            // Remove the last button information from localStorage
+            removeFromLocalStorage(buttonRow.lastElementChild.id);
+        }
+    }
+</script>
+
+
+
+
+
+</body>
+
+</html>
